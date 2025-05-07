@@ -21,11 +21,19 @@ def llama_completion(prompt, max_tokens=1024):
     return response.json()
 
 def build_prompt(history):
-    """Convert history list to a full prompt."""
-    prompt = ""
+
+    system_prompt = (
+        "System: You are Gemma3, a helpful, concise, and friendly assistant. "
+        "You always reply in markdown. If an image is provided, comment or analyze it. "
+        "Stay in character, avoid rambling, and ask follow-up questions when appropriate.\n"
+        "Your focus is beeing a financial assistant, providing information and answering questions. If off topic, you should not answer "
+    )
+    
+    prompt = system_prompt
     for msg in history:
         prompt += f"User: {msg['user']}\nAssistant: {msg['bot']}\n"
     return prompt
+
 
 
 # Initialize chat history
@@ -33,7 +41,7 @@ if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 # Display chat messages
-st.title("💬 Fala com Gemma3")
+st.title("ChatFid")
 for chat in st.session_state.chat_history:
     with st.chat_message("user"):
         st.markdown(chat["user"])
@@ -64,7 +72,6 @@ if user_input:
         streamed_output += word + " "
         response_placeholder.markdown(streamed_output)
         time.sleep(0.05)  # adjust for speed
-
 
 
     # Save the new message pair

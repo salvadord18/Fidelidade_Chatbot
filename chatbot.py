@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 import api
 import time
+import langdetect
 
 # Replace with your actual values
 api_key = api.api_key1
@@ -20,28 +21,57 @@ def llama_completion(prompt, max_tokens=1024):
     response = requests.post(endpoint, headers=headers, json=data)
     return response.json()
 
-def build_prompt(history):
-
-    system_prompt = (
-        "System: You are Gemma3, a helpful, concise, and friendly assistant. "
-        "You always reply in markdown. If an image is provided, comment or analyze it. "
-        "Stay in character, avoid rambling, and ask follow-up questions when appropriate.\n"
-        "Your focus is beeing a financial assistant, providing information and answering questions. If off topic, you should not answer "
-    )
+def detect_language(text):
+    """Detect the language of the input text."""
+    try:
+        return langdetect.detect(text)
+    except:
+        return 'en' 
     
-    prompt = system_prompt
+def build_prompt(history, user_input):
+    """Build the prompt including language-based instructions."""
+    detected_lang = detect_language(user_input)
+    
+    # System prompt in English, but you can adjust for other languages
+    if detected_lang == 'pt':
+        system_prompt = (
+            "És o **Gemma3**, um assistente financeiro amigável e conciso. "
+            "Responde em português, se o utilizador escrever em português. "
+            "Se o utilizador escrever em inglês, responde em inglês, e assim por diante. "
+            "Utiliza sempre markdown quando necessário."
+        )
+    else:
+        system_prompt = (
+            "You are **Gemma3**, a friendly and concise financial assistant. "
+            "Respond in the same language as the user writes in. "
+            "Always use markdown when appropriate."
+        )
+    
+    # Ensure we are always returning a valid string
+    prompt = system_prompt + "\n"
     for msg in history:
         prompt += f"User: {msg['user']}\nAssistant: {msg['bot']}\n"
-    return prompt
 
+    return prompt if prompt else ""
+    
 
+## CHATBOT
+st.title("ChatFid")
 
 # Initialize chat history
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
+# Display intro message if no messages have been exchanged yet
+if not st.session_state.chat_history:
+    with st.chat_message("assistant"):
+        st.markdown(
+            "Olá! 👋 Eu sou o **Gemma3**, um assistente financeiro. Como posso ajudar você hoje? "
+            "Pergunte-me sobre investimentos, orçamentos ou qualquer outra coisa que precise!"
+        )
+
 # Display chat messages
-st.title("ChatFid")
+
 for chat in st.session_state.chat_history:
     with st.chat_message("user"):
         st.markdown(chat["user"])
@@ -56,9 +86,12 @@ if user_input:
 
     # Add current user input to a temporary history
     temp_history = st.session_state.chat_history + [{"user": user_input, "bot": ""}]
-    full_prompt = build_prompt(temp_history[:-1]) + f"User: {user_input}\nAssistant:"
+    
+    # Pass user_input to build_prompt function
+    full_prompt = build_prompt(temp_history[:-1], user_input) + f"User: {user_input}\nAssistant:"
 
     response_placeholder = st.chat_message("assistant").empty()
+
 
     # Call model with the full prompt
     try:

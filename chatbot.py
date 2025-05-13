@@ -1,59 +1,12 @@
+# [i]                                                                                            #
+# [i] Libraries                                                                                   #
+# [i]                                                                                            #
+
 import streamlit as st
-import requests
-import api
 import time
-import langdetect
+from utils import *
 
-# Replace with your actual values
-api_key = api.api_key1
-endpoint = api.endpoint
 
-def llama_completion(prompt, max_tokens=1024):
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
-    data = {
-        "model": "Gemma3:12b",
-        "prompt": prompt,
-        "max_tokens": max_tokens
-    }
-    response = requests.post(endpoint, headers=headers, json=data)
-    return response.json()
-
-def detect_language(text):
-    """Detect the language of the input text."""
-    try:
-        return langdetect.detect(text)
-    except:
-        return 'en' 
-    
-def build_prompt(history, user_input):
-    """Build the prompt including language-based instructions."""
-    detected_lang = detect_language(user_input)
-    
-    # System prompt in English, but you can adjust for other languages
-    if detected_lang == 'pt':
-        system_prompt = (
-            "És o **Gemma3**, um assistente financeiro amigável e conciso. "
-            "Responde em português, se o utilizador escrever em português. "
-            "Se o utilizador escrever em inglês, responde em inglês, e assim por diante. "
-            "Utiliza sempre markdown quando necessário."
-        )
-    else:
-        system_prompt = (
-            "You are **Gemma3**, a friendly and concise financial assistant. "
-            "Respond in the same language as the user writes in. "
-            "Always use markdown when appropriate."
-        )
-    
-    # Ensure we are always returning a valid string
-    prompt = system_prompt + "\n"
-    for msg in history:
-        prompt += f"User: {msg['user']}\nAssistant: {msg['bot']}\n"
-
-    return prompt if prompt else ""
-    
 
 ## CHATBOT
 st.title("ChatFid")

@@ -1,3 +1,5 @@
+API_KEY="20211595:29e2994c-2337-48d4-a828-4a8f424edfd0"
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -5,6 +7,18 @@ __pycache__/
 
 # C extensions
 *.so
+
+# system files
+.DS_Store
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
 # Distribution / packaging
 .Python
@@ -167,11 +181,5 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# Ruff stuff:
-.ruff_cache/
-
 # PyPI configuration file
 .pypirc
-
-
-api.py

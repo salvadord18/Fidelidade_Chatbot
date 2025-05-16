@@ -5,6 +5,7 @@
 import api
 import langdetect
 import os
+from openai import AzureOpenAI
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -13,25 +14,16 @@ import fitz
 # Path for FAISS database
 DB_FAISS_PATH = 'vectorstore/db_faiss'
 
+# Path for PDF documents
+PDF_DIR = "docs/Documents for training and evaluation-20250507/PPR Evoluir_Documents/PPR Evoluir - Public Information"
+
 # These values should be set in .env location for safety reasons
 api_key = api.local_settings.API_KEY
 endpoint = api.local_settings.endpoint
 
-
-"""def llama_completion(prompt, max_tokens=1024):
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
-    data = {
-        "model": "Gemma3:12b",
-        "prompt": prompt,
-        "max_tokens": max_tokens
-    }
-    response = requests.post(endpoint, headers=headers, json=data)
-    return response.json()"""
-
-from openai import AzureOpenAI
+# [i]                                                                                            #
+# [i] Bot functions                                                                          #
+# [i]  
 
 # Azure OpenAI client setup
 client = AzureOpenAI(
@@ -46,14 +38,33 @@ def llama_completion(user_input, history=None, top_k=5):
     detected_lang = detect_language(user_input)
 
     system_prompt = (
-        "És o **Gemma3**, um assistente financeiro amigável e conciso. "
-        "Responde em português, se o utilizador escrever em português. "
-        "Se o utilizador escrever em inglês, responde em inglês, e assim por diante. "
-        "Utiliza sempre markdown quando necessário."
+        "És o **ChatFid**, um assistente virtual especializado em apoio a agentes da Fidelidade. "
+        "A tua função é prestar esclarecimentos exclusivamente sobre o produto PPR Evoluir, "
+        "com base integral e rigorosa na documentação oficial que te foi fornecida. "
+        "\n\n"
+        "Limites de atuação:\n"
+        "- Nunca deves inventar, extrapolar ou assumir qualquer informação que não esteja clara na documentação.\n"
+        "- Se a resposta à pergunta do utilizador não estiver presente nos documentos fornecidos, responde de forma clara e transparente, com algo como:\n"
+        "  - \"Desculpa, mas não disponho de dados suficientes para responder.\"\n"
+        "\n"
+        "Estilo e linguagem:\n"
+        "- Responde sempre em **português de Portugal**.\n"
+        "- Sê claro, objetivo e profissional, mas mantém um tom cordial e acessível.\n"
+        "- Utiliza formatação Markdown quando for útil (ex: listas, negrito, subtítulos, tabelas).\n"
+        "\n"
+        "Âmbito de conhecimento:\n"
+        "- Responde apenas a perguntas relacionadas com o **PPR Evoluir**.\n"
+        "- Caso sejas questionado sobre outros produtos ou temas fora do PPR Evoluir, indica que a tua função se limita ao apoio sobre este produto (apenas se não tiver descrito nos documentos fornecidos).\n"
+        "\n"
+        "Sempre que o utilizador disser algo como obrigado, obrigada, olá, bom dia, boa tarde ou expressar gratidão ou cumprimento, responde de forma educada e simpática."
         if detected_lang == 'pt' else
-        "You are **Gemma3**, a friendly and concise financial assistant. "
-        "Respond in the same language as the user writes in. "
-        "Always use markdown when appropriate."
+        "You are **ChatFid**, a virtual assistant for Fidelidade agents. "
+        "Your role is to provide answers exclusively about the **PPR Evoluir** product, based strictly on the official documentation provided. "
+        "Do not invent or assume anything not found in the documentation. "
+        "If the answer is not present, respond clearly with something like: "
+        "\"Sorry, I do not have enough information to answer that.\" "
+        "Use Markdown when helpful, keep your tone clear, professional and friendly."
+        "PLEASE ANSWER IN THE SAME LANGUAGE AS THE USER."
     )
 
     # Get vector DB context
@@ -92,40 +103,6 @@ def detect_language(text):
         return langdetect.detect(text)
     except:
         return 'en' 
-
-"""def build_prompt(history, user_input):
-    """"Build the full prompt with history and relevant PDF context.""""
-    detected_lang = detect_language(user_input)
-
-    if detected_lang == 'pt':
-        system_prompt = (
-            "És o **Gemma3**, um assistente financeiro amigável e conciso. "
-            "Responde em português, se o utilizador escrever em português. "
-            "Se o utilizador escrever em inglês, responde em inglês, e assim por diante. "
-            "Utiliza sempre markdown quando necessário."
-        )
-    else:
-        system_prompt = (
-            "You are **Gemma3**, a friendly and concise financial assistant. "
-            "Respond in the same language as the user writes in. "
-            "Always use markdown when appropriate."
-        )
-
-    # Load vectorstore and search for relevant context
-    vectorstore = load_vectorstore()
-    relevant_docs = vectorstore.similarity_search(user_input, k=3)
-    context = "\n\n".join([doc.page_content for doc in relevant_docs])
-
-    prompt = system_prompt + "\n\n"
-    prompt += f"Context:\n{context}\n\n"
-
-    for msg in history:
-        prompt += f"User: {msg['user']}\nAssistant: {msg['bot']}\n"
-    
-    return prompt"""
-
-
-PDF_DIR = "docs/Documents for training and evaluation-20250507/PPR Evoluir_Documents/PPR Evoluir - Public Information"
 
 def load_pdfs_from_directory(directory):
     documents = {}

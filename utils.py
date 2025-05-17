@@ -117,14 +117,14 @@ def extract_text_from_pdf(path):
     doc = fitz.open(path)
     return "\n".join(page.get_text() for page in doc)
 
-def chunk_texts(file_texts, chunk_size=500, chunk_overlap=100):
+"""def chunk_texts(file_texts, chunk_size=500, chunk_overlap=100):
     splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     file_chunks = {}
     for fname, text in file_texts.items():
         docs = splitter.create_documents([text])
         file_chunks[fname] = [chunk.page_content for chunk in docs]
     return file_chunks
-
+"""
 def create_vectorstore_from_pdfs():
     docs = load_pdfs_from_directory(PDF_DIR)
     print(f"Loaded {len(docs)} documents.")

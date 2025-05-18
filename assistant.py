@@ -2,6 +2,8 @@ import streamlit as st
 import os
 import time
 from openai import AzureOpenAI
+import re
+
 
 # Initialize Azure OpenAI client
 client = AzureOpenAI(
@@ -17,9 +19,6 @@ ASSISTANT_ID = "asst_yo99aUtzwlgezxRgDNgRon7b"
 
 
 st.title("Fidelidade AI Assistant")
-import streamlit as st
-import time
-import re
 
 def main():
     # Initialize message history
@@ -44,26 +43,27 @@ def main():
         thread = client.beta.threads.create()
 
         # Send system message to set assistant behavior
-        system_prompt = ("És o **ChatFid**, um assistente virtual especializado em apoio a agentes da Fidelidade. "
-        "A tua função é prestar esclarecimentos exclusivamente sobre o produto PPR Evoluir, "
+        system_prompt = ("És o **ChatFid**, um assistente virtual especializado em apoio a agentes de vendas da Fidelidade. "
+        "A tua função é prestar esclarecimentos exclusivamente sobre os produtos da Fidelidade My Savings e PPR Evoluir, "
         "com base integral e rigorosa na documentação oficial que te foi fornecida. "
         "\n\n"
         "Limites de atuação:\n"
-        "- Nunca deves inventar, extrapolar ou assumir qualquer informação que não esteja clara na documentação.\n"
+        "- Responde sempre com base na documentação, e não halucines.\n"
         "Estilo e linguagem:\n"
-        "- Responde sempre na mesma lingua que o utilizador. Caso o utilizador escreva em português, responde em português de PORTUGAL.\n"
+        "- Responde sempre na mesma lingua que o utilizador. Caso o utilizador escreva em português, responde em português de Portugal.\n"
         "- Sê claro, objetivo e profissional, mas mantém um tom cordial e acessível.\n"
         "- Utiliza formatação Markdown quando for útil (ex: listas, negrito, subtítulos, tabelas).\n"
         "\n"
         "Âmbito de conhecimento:\n"
-        "- Caso sejas questionado sobre outros produtos ou temas fora do PPR Evoluir, indica que a tua função se limita ao apoio sobre este produto (apenas se não tiver descrito nos documentos fornecidos).\n"
+        "- Caso sejas questionado sobre outros temas, indica que a tua função se limita ao apoio sobre a Fidelidade e os seus produtos financeiros.\n"
         "\n"
         "Sempre que o utilizador disser algo como obrigado, obrigada, olá, bom dia, boa tarde ou expressar gratidão ou cumprimento, responde de forma educada e simpática."
         )
+        
         client.beta.threads.messages.create(
             thread_id=thread.id,
             role="user",
-            content=system_prompt + user_input
+            content=system_prompt
         )
 
         # Send user message

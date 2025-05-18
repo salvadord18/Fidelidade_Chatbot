@@ -1,30 +1,30 @@
 import streamlit as st
-from streamlit_option_menu import option_menu
-import os
-import time
-from openai import AzureOpenAI
 import re
-
-import assistant_func as af
-
-
-# Initialize Azure OpenAI client
-client = AzureOpenAI(
-  azure_endpoint = "https://ai-bcds.openai.azure.com/",
-  api_key= "8J6pTdfaGgA5r193UVLsBshUspqwNpal42Jse1aHaok1cWNTLpRkJQQJ99BDACYeBjFXJ3w3AAABACOGLa23",
-  api_version="2024-05-01-preview"
-)
-
-# Assistant ID
-ASSISTANT_ID = "asst_yo99aUtzwlgezxRgDNgRon7b"
+import time
 
 
-# Set page configuration
-st.set_page_config(page_title="Fidelidade AI Assistant", layout="wide")
+# Assistant Instructions
+system_prompt = ("És o **ChatFid**, um assistente virtual especializado em apoio a agentes de vendas da Fidelidade. "
+        "A tua função é prestar esclarecimentos exclusivamente sobre os produtos da Fidelidade My Savings e PPR Evoluir, "
+        "com base integral e rigorosa na documentação oficial que te foi fornecida. "
+        "\n\n"
+        "Limites de atuação:\n"
+        "- Responde sempre com base na documentação, e não halucines.\n"
+        "Estilo e linguagem:\n"
+        "- Responde SEMPRE na mesma lingua que o utilizador. Caso o utilizador escreva em português, responde em português de Portugal.\n"
+        "- Sê claro, objetivo e profissional, mas mantém um tom cordial e acessível.\n"
+        "- Utiliza formatação Markdown quando for útil (ex: listas, negrito, subtítulos, tabelas).\n"
+        "\n"
+        "Âmbito de conhecimento:\n"
+        "- Caso sejas questionado sobre outros temas, indica que a tua função se limita ao apoio sobre a Fidelidade e os seus produtos financeiros.\n"
+        "\n"
+        "Sempre que o utilizador disser algo como obrigado, obrigada, olá, bom dia, boa tarde ou expressar gratidão ou cumprimento, responde de forma educada e simpática."
+        )
 
-################################################################################################
+def assistant_chat(client, assistant_id):
 
-def assistant_chat():
+    if st.session_state.get("selected_tab") != "ChatFid":
+        return
 
     st.title("Fidelidade AI Assistant")
     # Initialize message history
@@ -37,7 +37,7 @@ def assistant_chat():
             st.write(msg["content"])
 
     # User input
-    user_input = st.chat_input("Faça uma pergunta sobre os produtos Fidelidade")
+    user_input = st.chat_input("Escreva")
 
     if user_input:
         # Add user message locally first for instant UI update
@@ -49,7 +49,7 @@ def assistant_chat():
         thread = client.beta.threads.create()
 
         # Send system message to set assistant behavior
-        system_prompt = af.system_prompt
+        system_prompt = system_prompt
         
         client.beta.threads.messages.create(
             thread_id=thread.id,
@@ -67,7 +67,7 @@ def assistant_chat():
         # Run the assistant
         run = client.beta.threads.runs.create(
             thread_id=thread.id,
-            assistant_id=ASSISTANT_ID
+            assistant_id=assistant_id
         )
 
         while run.status in ['queued', 'in_progress', 'cancelling']:
@@ -87,27 +87,3 @@ def assistant_chat():
                     with st.chat_message("assistant"):
                         st.write(clean_response)
                     break
-
-
-
-# Initialize session state for the menu option if not present
-if "menu_option" not in st.session_state:
-    st.session_state.menu_option = "ChatFid"
-
-choice = option_menu(
-    menu_title=None,
-    options=["ChatFid", "Login"],
-    icons=["robot", "person"],
-    orientation="horizontal",
-    default_index=["ChatFid", "Login"].index(st.session_state.menu_option),
-    key="menu_option"
-)
-
-# Use the synced session state variable directly
-choice = st.session_state.menu_option
-
-if choice == "ChatFid":
-    assistant_chat()
-elif choice == "Login":
-    af.login()
-

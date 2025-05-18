@@ -4,7 +4,7 @@ import time
 
 
 # Assistant Instructions
-system_prompt = ("És o **ChatFid**, um assistente virtual especializado em apoio a agentes de vendas da Fidelidade. "
+instructions = ("És o **ChatFid**, um assistente virtual especializado em apoio a agentes de vendas da Fidelidade. "
         "A tua função é prestar esclarecimentos exclusivamente sobre os produtos da Fidelidade My Savings e PPR Evoluir, "
         "com base integral e rigorosa na documentação oficial que te foi fornecida. "
         "\n\n"
@@ -49,7 +49,7 @@ def assistant_chat(client, assistant_id):
         thread = client.beta.threads.create()
 
         # Send system message to set assistant behavior
-        system_prompt = system_prompt
+        system_prompt = instructions
         
         client.beta.threads.messages.create(
             thread_id=thread.id,

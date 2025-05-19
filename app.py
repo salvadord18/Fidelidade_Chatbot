@@ -6,7 +6,7 @@ from openai import AzureOpenAI
 import re
 
 import login as l
-import bot as bot
+import bot
 
 # Initialize Azure OpenAI client
 client = AzureOpenAI(
@@ -34,6 +34,7 @@ selected = option_menu(
     default_index=["ChatFid", "Login"].index(st.session_state.selected_tab)
 )
 
+
 # If the selection changed, update session state and rerun the app
 if selected != st.session_state.selected_tab:
     st.session_state.selected_tab = selected
@@ -41,6 +42,9 @@ if selected != st.session_state.selected_tab:
 
 # Page routing logic
 if st.session_state.selected_tab == "ChatFid":
-    bot.assistant_chat(client, ASSISTANT_ID)
+    # Use the user_id if logged in
+    user_id = st.session_state.get("user_id", None)
+    bot.assistant_chat(client, ASSISTANT_ID, user_id=user_id)
+
 elif st.session_state.selected_tab == "Login":
     l.login()

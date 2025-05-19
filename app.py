@@ -46,19 +46,57 @@ user_id = st.session_state.get("username")
 
 # Page routing logic
 if st.session_state.selected_tab == "ChatFid":
-    selected_convo_idx = 0
+    if "selected_convo_idx" not in st.session_state:
+        st.session_state.selected_convo_idx = 0
+
+    selected_convo_idx = st.session_state.selected_convo_idx
+
     if user_id:
         conversations = h.load_user_history(user_id)
-        options = [c["title"] for c in conversations] if conversations else ["Nova Conversa"]
-        selected_convo_idx = st.selectbox(
+        options = [c["title"] for c in conversations] if conversations else []
+        options = ["Nova Conversa"] + options
+
+        selected_option = st.selectbox(
             "Escolha uma conversa:",
             options=range(len(options)),
             format_func=lambda i: options[i],
-            index=0
+            index=st.session_state.selected_convo_idx
         )
+
+        if selected_option == 0:
+            # Only create a new conversation if not just created
+            if st.session_state.selected_convo_idx == 0 and conversations and conversations[-1]["messages"] == []:
+                pass
+            else:
+                h.start_new_conversation(user_id, f"Conversa {len(conversations)+1}")
+                conversations = h.load_user_history(user_id)
+                st.session_state.selected_convo_idx = len(conversations)
+                st.rerun()
+        else:
+            st.session_state.selected_convo_idx = selected_option
+            selected_convo_idx = selected_option
+
+            # --- Conversation Rename Logic ---
+            current_title = conversations[selected_convo_idx - 1]["title"]
+            new_title = st.text_input(
+                "Renomear conversa:",
+                value=current_title,
+                key=f"rename_convo_{selected_convo_idx}"
+            )
+            if new_title != current_title and new_title.strip():
+                conversations[selected_convo_idx - 1]["title"] = new_title.strip()
+                h.save_user_history(user_id, conversations)
+                st.rerun()
+
+            # --- Conversation Delete Logic ---
+            if st.button("Apagar esta conversa", key=f"delete_convo_{selected_convo_idx}"):
+                del conversations[selected_convo_idx - 1]
+                h.save_user_history(user_id, conversations)
+                st.session_state.selected_convo_idx = 0
+                st.rerun()
     else:
         selected_convo_idx = 0
 
-    bot.assistant_chat(client, ASSISTANT_ID, user_id=user_id, selected_convo_idx=selected_convo_idx)
+    bot.assistant_chat(client, ASSISTANT_ID, user_id=user_id, selected_convo_idx=selected_convo_idx-1 if selected_convo_idx > 0 else 0)
 elif st.session_state.selected_tab == "Login":
     l.login()

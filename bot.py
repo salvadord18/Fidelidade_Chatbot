@@ -25,12 +25,13 @@ instructions = ("És o **ChatFid**, um assistente virtual especializado em apoio
         )
 
 def assistant_chat(client, assistant_id, user_id=None, selected_convo_idx=0):
+    
     if st.session_state.get("selected_tab") != "ChatFid":
         return
 
     st.title("Fidelidade AI Assistant")
 
-    # Load all user conversations
+    # Load all user conversations if user_id
     conversations = []
     if user_id:
         conversations = load_user_history(user_id)
@@ -80,7 +81,7 @@ def assistant_chat(client, assistant_id, user_id=None, selected_convo_idx=0):
         thread = client.beta.threads.create()
 
         # Add system prompt if needed
-        system_prompt = instructions  # make sure this is defined
+        system_prompt = instructions  
         client.beta.threads.messages.create(
             thread_id=thread.id,
             role="user",

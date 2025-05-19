@@ -24,24 +24,35 @@ instructions = ("És o **ChatFid**, um assistente virtual especializado em apoio
         "Sempre que o utilizador disser algo como obrigado, obrigada, olá, bom dia, boa tarde ou expressar gratidão ou cumprimento, responde de forma educada e simpática."
         )
 
-def assistant_chat(client, assistant_id, user_id=None):
-
- 
+def assistant_chat(client, assistant_id, user_id=None, selected_convo_idx=0):
     if st.session_state.get("selected_tab") != "ChatFid":
         return
 
     st.title("Fidelidade AI Assistant")
 
-    # Path for saving
-    history_file = f"conversations/{user_id}.json" if user_id else None
+    # Load all user conversations
+    conversations = []
+    if user_id:
+        conversations = load_user_history(user_id)
+    # Load messages for selected conversation
+    if user_id and conversations:
+        selected_convo = conversations[selected_convo_idx]
+        st.session_state.messages = [
+            {"role": m["role"], "content": m["message"]}
+            for m in selected_convo["messages"]
+        ]
+    elif "messages" not in st.session_state:
+        st.session_state.messages = []
 
-    # Load previous messages from file if user is logged in
-    if "messages" not in st.session_state:
-        if user_id and os.path.exists(history_file):
-            with open(history_file, "r", encoding="utf-8") as f:
-                st.session_state.messages = json.load(f)
-        else:
-            st.session_state.messages = []
+    # Load messages for selected conversation
+    if user_id and conversations:
+        selected_convo = conversations[selected_convo_idx]
+        st.session_state.messages = [
+            {"role": m["role"], "content": m["message"]}
+            for m in selected_convo["messages"]
+        ]
+    elif "messages" not in st.session_state:
+        st.session_state.messages = []
 
     # Display previous chat messages
     for msg in st.session_state.messages:
@@ -52,7 +63,16 @@ def assistant_chat(client, assistant_id, user_id=None):
     user_input = st.chat_input("Escreva")
 
     if user_input:
+        # Add user message to session and history
         st.session_state.messages.append({"role": "user", "content": user_input})
+        if user_id:
+            # Start new conversation if none exists
+            if not conversations:
+                start_new_conversation(user_id, "Nova Conversa")
+                conversations = load_user_history(user_id)
+                selected_convo_idx = 0
+            add_message(user_id, "user", user_input)
+
         with st.chat_message("user"):
             st.write(user_input)
 
@@ -96,12 +116,8 @@ def assistant_chat(client, assistant_id, user_id=None):
                     raw_response = msg.content[0].text.value
                     clean_response = re.sub(r"【\d+:\d+†source】", "", raw_response).strip()
                     st.session_state.messages.append({"role": "assistant", "content": clean_response})
+                    if user_id:
+                        add_message(user_id, "assistant", clean_response)
                     with st.chat_message("assistant"):
                         st.write(clean_response)
                     break
-
-        # Save updated messages if logged in
-        if user_id:
-            os.makedirs("chat_history", exist_ok=True)
-            with open(history_file, "w", encoding="utf-8") as f:
-                json.dump(st.session_state.messages, f, ensure_ascii=False, indent=2)

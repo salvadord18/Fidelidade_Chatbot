@@ -7,6 +7,7 @@ import re
 
 import login as l
 import bot
+import history as h
 
 # Initialize Azure OpenAI client
 client = AzureOpenAI(
@@ -35,16 +36,29 @@ selected = option_menu(
 )
 
 
+
 # If the selection changed, update session state and rerun the app
 if selected != st.session_state.selected_tab:
     st.session_state.selected_tab = selected
     st.rerun()
 
+user_id = st.session_state.get("username")
+
 # Page routing logic
 if st.session_state.selected_tab == "ChatFid":
-    # Use the user_id if logged in
-    user_id = st.session_state.get("user_id", None)
-    bot.assistant_chat(client, ASSISTANT_ID, user_id=user_id)
+    selected_convo_idx = 0
+    if user_id:
+        conversations = h.load_user_history(user_id)
+        options = [c["title"] for c in conversations] if conversations else ["Nova Conversa"]
+        selected_convo_idx = st.selectbox(
+            "Escolha uma conversa:",
+            options=range(len(options)),
+            format_func=lambda i: options[i],
+            index=0
+        )
+    else:
+        selected_convo_idx = 0
 
+    bot.assistant_chat(client, ASSISTANT_ID, user_id=user_id, selected_convo_idx=selected_convo_idx)
 elif st.session_state.selected_tab == "Login":
     l.login()

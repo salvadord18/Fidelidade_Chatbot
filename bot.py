@@ -1,6 +1,9 @@
 import streamlit as st
 import re
 import time
+from history import load_user_history, save_user_history, start_new_conversation, add_message
+import os
+import json
 
 
 # Assistant Instructions
@@ -21,15 +24,24 @@ instructions = ("És o **ChatFid**, um assistente virtual especializado em apoio
         "Sempre que o utilizador disser algo como obrigado, obrigada, olá, bom dia, boa tarde ou expressar gratidão ou cumprimento, responde de forma educada e simpática."
         )
 
-def assistant_chat(client, assistant_id):
+def assistant_chat(client, assistant_id, user_id=None):
 
+ 
     if st.session_state.get("selected_tab") != "ChatFid":
         return
 
     st.title("Fidelidade AI Assistant")
-    # Initialize message history
+
+    # Path for saving
+    history_file = f"conversations/{user_id}.json" if user_id else None
+
+    # Load previous messages from file if user is logged in
     if "messages" not in st.session_state:
-        st.session_state.messages = []
+        if user_id and os.path.exists(history_file):
+            with open(history_file, "r", encoding="utf-8") as f:
+                st.session_state.messages = json.load(f)
+        else:
+            st.session_state.messages = []
 
     # Display previous chat messages
     for msg in st.session_state.messages:
@@ -40,7 +52,6 @@ def assistant_chat(client, assistant_id):
     user_input = st.chat_input("Escreva")
 
     if user_input:
-        # Add user message locally first for instant UI update
         st.session_state.messages.append({"role": "user", "content": user_input})
         with st.chat_message("user"):
             st.write(user_input)
@@ -48,9 +59,8 @@ def assistant_chat(client, assistant_id):
         # Create thread
         thread = client.beta.threads.create()
 
-        # Send system message to set assistant behavior
-        system_prompt = instructions
-        
+        # Add system prompt if needed
+        system_prompt = instructions  # make sure this is defined
         client.beta.threads.messages.create(
             thread_id=thread.id,
             role="user",
@@ -70,6 +80,7 @@ def assistant_chat(client, assistant_id):
             assistant_id=assistant_id
         )
 
+        # Wait for completion
         while run.status in ['queued', 'in_progress', 'cancelling']:
             time.sleep(1)
             run = client.beta.threads.runs.retrieve(
@@ -77,6 +88,7 @@ def assistant_chat(client, assistant_id):
                 run_id=run.id
             )
 
+        # Get the assistant's response
         if run.status == "completed":
             messages = client.beta.threads.messages.list(thread_id=thread.id)
             for msg in messages.data[::-1]:
@@ -87,3 +99,9 @@ def assistant_chat(client, assistant_id):
                     with st.chat_message("assistant"):
                         st.write(clean_response)
                     break
+
+        # Save updated messages if logged in
+        if user_id:
+            os.makedirs("chat_history", exist_ok=True)
+            with open(history_file, "w", encoding="utf-8") as f:
+                json.dump(st.session_state.messages, f, ensure_ascii=False, indent=2)

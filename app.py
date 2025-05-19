@@ -9,6 +9,7 @@ import login as l
 import bot
 import history as h
 
+
 # Initialize Azure OpenAI client
 client = AzureOpenAI(
     azure_endpoint="https://ai-bcds.openai.azure.com/",
@@ -42,6 +43,7 @@ if selected != st.session_state.selected_tab:
     st.session_state.selected_tab = selected
     st.rerun()
 
+# Define the user ID
 user_id = st.session_state.get("username")
 
 # Page routing logic
@@ -49,13 +51,17 @@ if st.session_state.selected_tab == "ChatFid":
     if "selected_convo_idx" not in st.session_state:
         st.session_state.selected_convo_idx = 0
 
+    # Load the selected conversation index from session state
     selected_convo_idx = st.session_state.selected_convo_idx
 
+    # Only shows the conversation selection if the user is logged in
     if user_id:
         conversations = h.load_user_history(user_id)
         options = [c["title"] for c in conversations] if conversations else []
         options = ["Nova Conversa"] + options
 
+
+        # Add a new conversation option
         selected_option = st.selectbox(
             "Escolha uma conversa:",
             options=range(len(options)),
@@ -76,7 +82,7 @@ if st.session_state.selected_tab == "ChatFid":
             st.session_state.selected_convo_idx = selected_option
             selected_convo_idx = selected_option
 
-            # --- Conversation Rename Logic ---
+            # Conversation Rename Logic
             current_title = conversations[selected_convo_idx - 1]["title"]
             new_title = st.text_input(
                 "Renomear conversa:",
@@ -88,7 +94,7 @@ if st.session_state.selected_tab == "ChatFid":
                 h.save_user_history(user_id, conversations)
                 st.rerun()
 
-            # --- Conversation Delete Logic ---
+            # Conversation Delete Logic
             if st.button("Apagar esta conversa", key=f"delete_convo_{selected_convo_idx}"):
                 del conversations[selected_convo_idx - 1]
                 h.save_user_history(user_id, conversations)
@@ -97,6 +103,9 @@ if st.session_state.selected_tab == "ChatFid":
     else:
         selected_convo_idx = 0
 
+    # Display the chat interface
     bot.assistant_chat(client, ASSISTANT_ID, user_id=user_id, selected_convo_idx=selected_convo_idx-1 if selected_convo_idx > 0 else 0)
+
+# Login page    
 elif st.session_state.selected_tab == "Login":
     l.login()

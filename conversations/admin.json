@@ -1,0 +1,28 @@
+[
+  {
+    "title": "Nova Conversa",
+    "started_at": "2025-05-19T16:31:17.734848",
+    "messages": [
+      {
+        "role": "user",
+        "message": "hey",
+        "timestamp": "2025-05-19T16:31:17.736992"
+      },
+      {
+        "role": "assistant",
+        "message": "Ol\u00e1! Como posso ajudar-te hoje? Se tiveres alguma d\u00favida sobre os produtos da Fidelidade, como o My Savings ou o PPR Evoluir, estou aqui para ajudar!",
+        "timestamp": "2025-05-19T16:31:22.013773"
+      },
+      {
+        "role": "user",
+        "message": "fala-me sobre o my savigns",
+        "timestamp": "2025-05-19T16:32:01.974971"
+      },
+      {
+        "role": "assistant",
+        "message": "O **Fidelidade My Savings** \u00e9 uma solu\u00e7\u00e3o de poupan\u00e7a e investimento oferecida pela Fidelidade, que se baseia numa plataforma 100% digital. Aqui est\u00e3o as principais caracter\u00edsticas e informa\u00e7\u00f5es sobre este produto:\n\n### Caracter\u00edsticas do Fidelidade My Savings\n\n1. **Objetivos de Poupan\u00e7a e Investimento**:\n   - Permite definir **Objetivos de Poupan\u00e7a** e **Objetivos de Investimento**.\n   - Cada objetivo \u00e9 caracterizado por:\n     - Um valor objetivo (meta).\n     - Datas de in\u00edcio e fim estimadas.\n     - Uma op\u00e7\u00e3o escolhida com o correspondente n\u00edvel de garantia, se aplic\u00e1vel.\n     - Um plano de entregas.\n\n2. **Op\u00e7\u00f5es Dispon\u00edveis**:\n   - **Op\u00e7\u00e3o Seguro**: Garantia de 100% do capital investido, dispon\u00edvel apenas para objetivos de poupan\u00e7a.\n   - **Op\u00e7\u00e3o Prote\u00e7\u00e3o A\u00e7\u00f5es**: Garantia de 90% do capital investido n\u00e3o resgatado, dispon\u00edvel para ambos os objetivos.\n   - **Op\u00e7\u00e3o Din\u00e2mico A\u00e7\u00f5es**: Sem garantia de capital, com rendimento vari\u00e1vel.\n   - **Op\u00e7\u00e3o ESG A\u00e7\u00f5es**: Sem garantia de capital, focada em investimentos sustent\u00e1veis e com caracter\u00edsticas ambientais ou sociais.\n\n3. **Comiss\u00f5es**:\n   - Comiss\u00f5es de gest\u00e3o reduzidas, dependendo da op\u00e7\u00e3o escolhida.\n\n4. **Acesso e Subscri\u00e7\u00e3o**:\n   - A subscri\u00e7\u00e3o do produto \u00e9 feita exclusivamente atrav\u00e9s da app **MySavings**, dispon\u00edvel para smartphones com sistemas operativos iOS (vers\u00e3o 9 ou superior) e Android (vers\u00f5es 5.1 ou superior).\n   - A app \u00e9 gratuita e permite acompanhar a evolu\u00e7\u00e3o dos objetivos de poupan\u00e7a e investimento.\n\n5. **Dura\u00e7\u00e3o dos Objetivos**:\n   - Os objetivos de poupan\u00e7a t\u00eam uma dura\u00e7\u00e3o m\u00ednima de 6 meses e m\u00e1xima de 30 anos.\n\n6. **Prote\u00e7\u00e3o de Dados**:\n   - A Fidelidade cumpre a regulamenta\u00e7\u00e3o em mat\u00e9ria de prote\u00e7\u00e3o de dados, garantindo a seguran\u00e7a das informa\u00e7\u00f5es pessoais dos clientes.\n\n### Conclus\u00e3o\nO Fidelidade My Savings \u00e9 uma solu\u00e7\u00e3o flex\u00edvel e digital que permite aos clientes definir e acompanhar os seus objetivos de poupan\u00e7a e investimento de forma pr\u00e1tica e segura. Se precisar de mais informa\u00e7\u00f5es ou esclarecimentos, estou \u00e0 disposi\u00e7\u00e3o para ajudar!",
+        "timestamp": "2025-05-19T16:32:20.382281"
+      }
+    ]
+  }
+]

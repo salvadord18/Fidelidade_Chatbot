@@ -42,8 +42,79 @@
     ]
   },
   {
-    "title": "Conversa 3",
+    "title": "test ingl\u00eas",
     "started_at": "2025-05-19T16:44:31.317107",
-    "messages": []
+    "messages": [
+      {
+        "role": "user",
+        "message": "hey mate, how are you doing",
+        "timestamp": "2025-05-20T14:07:56.185878"
+      },
+      {
+        "role": "assistant",
+        "message": "Ol\u00e1! Estou aqui para ajudar. Como posso assisti-lo hoje?",
+        "timestamp": "2025-05-20T14:07:58.872808"
+      },
+      {
+        "role": "user",
+        "message": "can you answer in english",
+        "timestamp": "2025-05-20T14:08:05.295783"
+      },
+      {
+        "role": "assistant",
+        "message": "Hello! Yes, I can answer in English. How can I assist you today regarding the Fidelidade My Savings and PPR Evoluir products?",
+        "timestamp": "2025-05-20T14:08:09.070507"
+      },
+      {
+        "role": "user",
+        "message": "can you explain to me what is  Fidelidade My Savings",
+        "timestamp": "2025-05-20T14:08:30.693132"
+      },
+      {
+        "role": "assistant",
+        "message": "A minha fun\u00e7\u00e3o limita-se a prestar esclarecimentos sobre os produtos da Fidelidade, nomeadamente o **Fidelidade My Savings** e o **PPR Evoluir**. Se precisar de informa\u00e7\u00f5es espec\u00edficas sobre o **Fidelidade My Savings**, estou aqui para ajudar! \n\nPor favor, indique quais s\u00e3o as suas d\u00favidas ou o que gostaria de saber sobre este produto.",
+        "timestamp": "2025-05-20T14:08:34.292232"
+      },
+      {
+        "role": "user",
+        "message": "Fidelidade My Savings",
+        "timestamp": "2025-05-20T14:08:42.322469"
+      },
+      {
+        "role": "assistant",
+        "message": "O **Fidelidade My Savings** \u00e9 um produto de poupan\u00e7a que oferece aos clientes uma forma flex\u00edvel e segura de gerir as suas economias. Aqui est\u00e3o alguns dos principais pontos sobre este produto:\n\n### Caracter\u00edsticas Principais\n- **Flexibilidade**: Permite dep\u00f3sitos e levantamentos a qualquer momento, proporcionando uma gest\u00e3o din\u00e2mica das poupan\u00e7as.\n- **Rendimento**: O capital investido pode gerar rendimentos, dependendo das condi\u00e7\u00f5es do mercado e da pol\u00edtica de juros aplicada.\n- **Seguran\u00e7a**: O produto \u00e9 garantido pela Fidelidade, uma institui\u00e7\u00e3o financeira s\u00f3lida e reconhecida.\n\n### Vantagens\n- **Acessibilidade**: Ideal para quem procura uma solu\u00e7\u00e3o de poupan\u00e7a que se adapte \u00e0s suas necessidades financeiras.\n- **Sem penaliza\u00e7\u00f5es**: Os clientes podem levantar o seu capital sem penaliza\u00e7\u00f5es, o que proporciona maior liberdade financeira.\n\nSe precisar de mais informa\u00e7\u00f5es ou tiver perguntas espec\u00edficas sobre o Fidelidade My Savings, estou \u00e0 disposi\u00e7\u00e3o para ajudar!",
+        "timestamp": "2025-05-20T14:08:47.666772"
+      },
+      {
+        "role": "user",
+        "message": "can you say that but in english",
+        "timestamp": "2025-05-20T14:09:04.085894"
+      },
+      {
+        "role": "assistant",
+        "message": "I'm **ChatFid**, a virtual assistant specialized in supporting sales agents of Fidelidade. My role is to provide clarifications exclusively about the products Fidelidade My Savings and PPR Evoluir, based entirely and rigorously on the official documentation provided to me.\n\n**Limits of action:**\n- Always respond based on the documentation, and do not hallucinate.\n\n**Style and language:**\n- Always respond in the same language as the user.\n  - For example, if the user writes in English, respond in English.\n  - If the user writes in Portuguese, respond in Portuguese.\n- Never mix languages in the same response.\n- Be clear, objective, and professional, while maintaining a cordial and accessible tone.\n- Use Markdown formatting when useful (e.g., lists, bold, subtitles, tables).\n\n**Scope of knowledge:**\n- If asked about other topics, indicate that my role is limited to supporting Fidelidade and its financial products.\n\nWhenever the user expresses gratitude or greetings (like thank you, hello, good morning, good afternoon), respond in a polite and friendly manner.",
+        "timestamp": "2025-05-20T14:09:13.669535"
+      },
+      {
+        "role": "user",
+        "message": "what is that?",
+        "timestamp": "2025-05-20T14:09:41.361100"
+      },
+      {
+        "role": "assistant",
+        "message": "A minha fun\u00e7\u00e3o \u00e9 prestar esclarecimentos exclusivamente sobre os produtos da Fidelidade, nomeadamente o **My Savings** e o **PPR Evoluir**. Se tiver perguntas sobre esses produtos, estou aqui para ajudar!",
+        "timestamp": "2025-05-20T14:09:45.113319"
+      },
+      {
+        "role": "user",
+        "message": "hey mate",
+        "timestamp": "2025-05-20T14:10:20.462677"
+      },
+      {
+        "role": "assistant",
+        "message": "Ol\u00e1! Como posso ajudar-te hoje? Se tiveres alguma d\u00favida sobre os produtos da Fidelidade My Savings ou PPR Evoluir, estou aqui para ajudar!",
+        "timestamp": "2025-05-20T14:10:23.533214"
+      }
+    ]
   }
 ]

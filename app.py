@@ -18,7 +18,17 @@ client = AzureOpenAI(
 )
 
 # Assistant ID
-ASSISTANT_ID = "asst_yo99aUtzwlgezxRgDNgRon7b"
+## assistant_name = wjrmuwhdod --> é suposto estar comentado
+## ASSISTANT_ID = "asst_zToHYIjYGdIj6Xy0TMqQ23Kw"  --> é suposto estar comentado
+
+assistant = client.beta.assistants.create(
+    model="gpt-4o-mini", 
+    instructions = bot.instructions,
+    tool_resources={"code_interpreter":{"file_ids":["assistant-WZQHoFwobKHT1ZWKkEAGqm","assistant-MsQgxjsadXVcZKLw2fJwNh","assistant-LpaoUAR5Rq3MgXfMSU4i9A","assistant-KW358eNBGny1N5DM8LoBaC","assistant-CiKqiv2zmbtF8FH2iQAKAw","assistant-9yhV7cKx5ynoLqoPbs1B67","assistant-5QanyuMMkjkkfVUv6rkCfM"]}},
+    temperature=0.3,
+    top_p=1
+    )
+
 
 # Set page configuration
 st.set_page_config(page_title="Fidelidade AI Assistant", layout="wide")
@@ -104,7 +114,7 @@ if st.session_state.selected_tab == "ChatFid":
         selected_convo_idx = 0
 
     # Display the chat interface
-    bot.assistant_chat(client, ASSISTANT_ID, user_id=user_id, selected_convo_idx=selected_convo_idx-1 if selected_convo_idx > 0 else 0)
+    bot.assistant_chat(client, assistant.id, user_id=user_id, selected_convo_idx=selected_convo_idx-1 if selected_convo_idx > 0 else 0)
 
 # Login page    
 elif st.session_state.selected_tab == "Login":

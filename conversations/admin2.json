@@ -1,0 +1,18 @@
+[
+  {
+    "title": "Conversa 1",
+    "started_at": "2025-05-21T22:35:57.313006",
+    "messages": [
+      {
+        "role": "user",
+        "message": "ol\u00e1",
+        "timestamp": "2025-05-21T22:36:02.233222"
+      },
+      {
+        "role": "assistant",
+        "message": "Ol\u00e1! Como posso ajudar-te hoje? Se tiveres alguma d\u00favida sobre os produtos My Savings ou PPR Evoluir da Fidelidade, estou aqui para ajudar.",
+        "timestamp": "2025-05-21T22:36:07.147524"
+      }
+    ]
+  }
+]

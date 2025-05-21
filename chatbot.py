@@ -4,7 +4,7 @@
 
 import streamlit as st
 import time
-from utils import *
+from old.utils import *
 
 # [i]                                                                                            #
 # [i] CHATBOT                                                                                   #

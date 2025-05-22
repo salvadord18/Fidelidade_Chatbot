@@ -25,7 +25,7 @@ assistant = client.beta.assistants.create(
     model="gpt-4o-mini", 
     instructions = bot.instructions,
     tool_resources={"code_interpreter":{"file_ids":["assistant-WZQHoFwobKHT1ZWKkEAGqm","assistant-MsQgxjsadXVcZKLw2fJwNh","assistant-LpaoUAR5Rq3MgXfMSU4i9A","assistant-KW358eNBGny1N5DM8LoBaC","assistant-CiKqiv2zmbtF8FH2iQAKAw","assistant-9yhV7cKx5ynoLqoPbs1B67","assistant-5QanyuMMkjkkfVUv6rkCfM"]}},
-    temperature=0.3,
+    temperature=0.2,
     top_p=1
     )
 

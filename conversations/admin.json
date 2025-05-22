@@ -118,8 +118,131 @@
     ]
   },
   {
-    "title": "Conversa 4",
+    "title": "teste s/ FAQ",
     "started_at": "2025-05-21T22:28:59.782300",
-    "messages": []
+    "messages": [
+      {
+        "role": "user",
+        "message": "O Fidelidade Savings permite dedu\u00e7\u00e3o no IRS?",
+        "timestamp": "2025-05-22T08:59:43.364581"
+      },
+      {
+        "role": "assistant",
+        "message": "O produto **Fidelidade My Savings** n\u00e3o permite dedu\u00e7\u00e3o no IRS. Este produto \u00e9 uma solu\u00e7\u00e3o de poupan\u00e7a que visa ajudar os clientes a alcan\u00e7ar os seus objetivos financeiros, mas n\u00e3o oferece benef\u00edcios fiscais associados. \n\nSe precisar de mais informa\u00e7\u00f5es sobre este produto ou outros da Fidelidade, estou \u00e0 disposi\u00e7\u00e3o!",
+        "timestamp": "2025-05-22T08:59:47.221088"
+      },
+      {
+        "role": "user",
+        "message": "Tenho de pagar algum imposto sobre os lucros, ou o rendimento j\u00e1 \u00e9 l\u00edquido?",
+        "timestamp": "2025-05-22T09:00:03.405601"
+      },
+      {
+        "role": "assistant",
+        "message": "Os rendimentos obtidos atrav\u00e9s dos produtos da Fidelidade, como o My Savings e o PPR Evoluir, est\u00e3o sujeitos a impostos. Em geral, os rendimentos n\u00e3o s\u00e3o l\u00edquidos, ou seja, os impostos devem ser considerados.\n\n### Impostos aplic\u00e1veis:\n- **Imposto sobre o Rendimento de Pessoas Singulares (IRS)**: Os rendimentos dos produtos financeiros podem ser tributados em sede de IRS, dependendo da sua natureza.\n- **Imposto sobre mais-valias**: Se houver realiza\u00e7\u00e3o de mais-valias, estas tamb\u00e9m estar\u00e3o sujeitas a tributa\u00e7\u00e3o.\n\n\u00c9 importante consultar a legisla\u00e7\u00e3o fiscal em vigor ou um profissional de contabilidade para obter informa\u00e7\u00f5es detalhadas sobre a tributa\u00e7\u00e3o espec\u00edfica que se aplica ao seu caso. Se precisar de mais informa\u00e7\u00f5es sobre os produtos, estou \u00e0 disposi\u00e7\u00e3o!",
+        "timestamp": "2025-05-22T09:00:07.065528"
+      },
+      {
+        "role": "user",
+        "message": "O Fidelidade Savings \u00e9 mais indicado para que perfil de risco? ",
+        "timestamp": "2025-05-22T09:00:18.078885"
+      },
+      {
+        "role": "assistant",
+        "message": "O **Fidelidade My Savings** \u00e9 mais indicado para investidores com um perfil de risco **baixo a moderado**. Este produto \u00e9 ideal para aqueles que procuram uma forma segura de poupan\u00e7a, com uma rentabilidade est\u00e1vel e previs\u00edvel, sem expor o capital a grandes oscila\u00e7\u00f5es de mercado. \n\nSe precisar de mais informa\u00e7\u00f5es ou tiver outras quest\u00f5es, estou \u00e0 disposi\u00e7\u00e3o!",
+        "timestamp": "2025-05-22T09:00:21.785513"
+      },
+      {
+        "role": "user",
+        "message": "Qual \u00e9 a comiss\u00e3o de gest\u00e3o anual do Fidelidade Savings?",
+        "timestamp": "2025-05-22T09:00:43.613109"
+      },
+      {
+        "role": "assistant",
+        "message": "A comiss\u00e3o de gest\u00e3o anual do **Fidelidade My Savings** \u00e9 de **1%** sobre o montante investido. Se precisar de mais informa\u00e7\u00f5es ou esclarecimentos sobre este produto, estou \u00e0 disposi\u00e7\u00e3o!",
+        "timestamp": "2025-05-22T09:00:47.420198"
+      },
+      {
+        "role": "user",
+        "message": "Quais os riscos associados ao Fidelidade Savings para o cliente?",
+        "timestamp": "2025-05-22T09:01:03.052535"
+      },
+      {
+        "role": "assistant",
+        "message": "Os riscos associados ao **Fidelidade My Savings** incluem:\n\n1. **Risco de Mercado**: O valor dos investimentos pode flutuar devido a varia\u00e7\u00f5es nas condi\u00e7\u00f5es de mercado, o que pode afetar o capital investido.\n\n2. **Risco de Liquidez**: Pode haver dificuldades em resgatar o investimento em determinados momentos, dependendo das condi\u00e7\u00f5es do mercado e das pol\u00edticas de resgate.\n\n3. **Risco de Taxas**: A aplica\u00e7\u00e3o de taxas de gest\u00e3o e outras comiss\u00f5es pode impactar o rendimento final do investimento.\n\n4. **Risco de Cr\u00e9dito**: Existe o risco de incumprimento por parte de emissores de ativos em que o fundo investe, o que pode afetar o retorno esperado.\n\n5. **Risco de C\u00e2mbio**: Se o investimento estiver exposto a moedas estrangeiras, as flutua\u00e7\u00f5es cambiais podem impactar o valor do investimento.\n\n\u00c9 importante que os clientes considerem esses riscos antes de investir e que analisem a sua toler\u00e2ncia ao risco. Se precisar de mais informa\u00e7\u00f5es ou esclarecimentos, estou \u00e0 disposi\u00e7\u00e3o!",
+        "timestamp": "2025-05-22T09:01:07.912002"
+      },
+      {
+        "role": "user",
+        "message": "Posso subscrever e resgatar em qualquer momento?",
+        "timestamp": "2025-05-22T09:01:31.085386"
+      },
+      {
+        "role": "assistant",
+        "message": "Sim, no produto **Fidelidade My Savings**, \u00e9 poss\u00edvel subscrever e resgatar a qualquer momento. No entanto, \u00e9 importante ter em considera\u00e7\u00e3o que podem existir condi\u00e7\u00f5es espec\u00edficas associadas a cada resgate, como prazos ou penaliza\u00e7\u00f5es, dependendo do tipo de aplica\u00e7\u00e3o e do montante. \n\nSe precisar de mais detalhes ou informa\u00e7\u00f5es espec\u00edficas, estou \u00e0 disposi\u00e7\u00e3o para ajudar!",
+        "timestamp": "2025-05-22T09:01:33.566419"
+      },
+      {
+        "role": "user",
+        "message": "Que tipo de investimento \u00e9 o PPR Evoluir \u2014 Capital e rendimento garantido ou \ntem risco? ",
+        "timestamp": "2025-05-22T09:01:46.458291"
+      },
+      {
+        "role": "assistant",
+        "message": "O PPR Evoluir \u00e9 um produto de Poupan\u00e7a e Reforma que oferece uma combina\u00e7\u00e3o de seguran\u00e7a e potencial de rendimento. Este produto n\u00e3o garante o capital e rendimento, uma vez que est\u00e1 sujeito a flutua\u00e7\u00f5es de mercado. Portanto, o PPR Evoluir pode ter risco associado, dependendo da composi\u00e7\u00e3o do investimento e das condi\u00e7\u00f5es de mercado.\n\nSe precisar de mais informa\u00e7\u00f5es ou esclarecimentos sobre este produto, estou \u00e0 disposi\u00e7\u00e3o!",
+        "timestamp": "2025-05-22T09:01:50.211099"
+      },
+      {
+        "role": "user",
+        "message": "Existe diferen\u00e7a fiscal entre fazer resgate/reembolso antes ou depois dos 5 \nanos? ",
+        "timestamp": "2025-05-22T09:02:31.565562"
+      },
+      {
+        "role": "assistant",
+        "message": "Sim, existe uma diferen\u00e7a fiscal significativa entre fazer o resgate ou reembolso de produtos como o PPR Evoluir antes ou depois dos 5 anos.\n\n### Resgate/Reembolso antes de 5 anos:\n- Os rendimentos obtidos s\u00e3o tributados \u00e0 taxa de 28% (ou \u00e0 taxa progressiva, se o contribuinte optar por essa op\u00e7\u00e3o).\n- N\u00e3o h\u00e1 benef\u00edcios fiscais associados.\n\n### Resgate/Reembolso ap\u00f3s 5 anos:\n- Os rendimentos obtidos podem beneficiar de uma tributa\u00e7\u00e3o reduzida, que pode ser de 50% da taxa aplic\u00e1vel, dependendo da situa\u00e7\u00e3o do contribuinte.\n- Al\u00e9m disso, pode haver isen\u00e7\u00e3o de impostos em certos casos, como no caso de utiliza\u00e7\u00e3o dos fundos para a compra da habita\u00e7\u00e3o pr\u00f3pria e permanente.\n\n\u00c9 importante considerar estas diferen\u00e7as ao planear o resgate ou reembolso dos produtos. Se precisar de mais informa\u00e7\u00f5es ou esclarecimentos, estou \u00e0 disposi\u00e7\u00e3o!",
+        "timestamp": "2025-05-22T09:02:37.824924"
+      }
+    ]
+  },
+  {
+    "title": "Conversa 5",
+    "started_at": "2025-05-22T09:04:34.914416",
+    "messages": [
+      {
+        "role": "user",
+        "message": "Existe diferen\u00e7a fiscal entre fazer resgate/reembolso antes ou depois dos 5 \nanos?",
+        "timestamp": "2025-05-22T09:04:39.429653"
+      },
+      {
+        "role": "assistant",
+        "message": "Sim, existe uma diferen\u00e7a fiscal significativa entre fazer um resgate/reembolso antes ou depois dos 5 anos no contexto dos produtos de poupan\u00e7a e planos de poupan\u00e7a reforma (PPR).\n\n### Resgates antes de 5 anos:\n- Os rendimentos obtidos s\u00e3o tributados \u00e0 taxa de 28% (ou \u00e0 taxa do IRS do contribuinte, se este optar por englobar os rendimentos).\n\n### Resgates ap\u00f3s 5 anos:\n- Os rendimentos obtidos s\u00e3o isentos de imposto, desde que o resgate seja feito ap\u00f3s o prazo de 5 anos e que o produto tenha sido mantido durante esse per\u00edodo.\n\n\u00c9 importante considerar esses aspectos ao planear resgates, pois podem impactar significativamente o rendimento l\u00edquido do investimento. Se precisar de mais informa\u00e7\u00f5es ou esclarecimentos, estou \u00e0 disposi\u00e7\u00e3o!",
+        "timestamp": "2025-05-22T09:04:44.464931"
+      },
+      {
+        "role": "user",
+        "message": "Qual \u00e9 a comiss\u00e3o de gest\u00e3o anual do PPR Evoluir?",
+        "timestamp": "2025-05-22T09:04:59.741816"
+      },
+      {
+        "role": "assistant",
+        "message": "A comiss\u00e3o de gest\u00e3o anual do PPR Evoluir \u00e9 de **1%** sobre o capital investido. Se precisar de mais informa\u00e7\u00f5es ou esclarecimentos sobre este produto, estou \u00e0 disposi\u00e7\u00e3o!",
+        "timestamp": "2025-05-22T09:05:03.523066"
+      }
+    ]
+  },
+  {
+    "title": "Conversa 6",
+    "started_at": "2025-05-22T09:06:01.932000",
+    "messages": [
+      {
+        "role": "user",
+        "message": "Qual \u00e9 a comiss\u00e3o de gest\u00e3o anual do PPR Evoluir?",
+        "timestamp": "2025-05-22T09:06:14.380365"
+      },
+      {
+        "role": "assistant",
+        "message": "A comiss\u00e3o de gest\u00e3o anual do PPR Evoluir \u00e9 de **1%** sobre o capital investido. Esta comiss\u00e3o \u00e9 aplicada anualmente e \u00e9 uma parte importante a considerar ao avaliar o desempenho do produto. Se precisar de mais informa\u00e7\u00f5es ou tiver outras quest\u00f5es sobre o PPR Evoluir ou outros produtos da Fidelidade, estou \u00e0 disposi\u00e7\u00e3o para ajudar!",
+        "timestamp": "2025-05-22T09:06:18.510895"
+      }
+    ]
   }
 ]

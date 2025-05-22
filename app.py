@@ -20,6 +20,7 @@ client = AzureOpenAI(
 # Assistant ID
 ## assistant_name = wjrmuwhdod --> é suposto estar comentado
 ## ASSISTANT_ID = "asst_zToHYIjYGdIj6Xy0TMqQ23Kw"  --> é suposto estar comentado
+## vector store name = vector_store_wjrmuwhdod --> é suposto estar comentado
 
 assistant = client.beta.assistants.create(
     model="gpt-4o-mini", 

@@ -131,3 +131,27 @@ def assistant_chat(client, assistant_id, user_id=None, selected_convo_idx=0):
                     with st.chat_message("assistant"):
                         st.write(clean_response)
                     break
+
+# Function needed to evaluate the bot
+def get_assistant_response(client, assistant_id, user_input):
+    thread = client.beta.threads.create()
+    # Add system instructions and user input as one message
+    system_prompt = instructions
+    client.beta.threads.messages.create(thread_id=thread.id, role="user", content=system_prompt + "\n\n" + user_input)
+
+    # Run the assistant
+    run = client.beta.threads.runs.create(thread_id=thread.id, assistant_id=assistant_id)
+
+    while run.status in ['queued', 'in_progress', 'cancelling']:
+        time.sleep(1)
+        run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
+
+    if run.status == "completed":
+        messages = client.beta.threads.messages.list(thread_id=thread.id)
+        for msg in reversed(messages.data):
+            if msg.role == "assistant":
+                raw_response = msg.content[0].text.value
+                clean_response = re.sub(r"【\d+:\d+†source】", "", raw_response).strip()
+                return clean_response
+
+    return "[ERROR] No valid response"

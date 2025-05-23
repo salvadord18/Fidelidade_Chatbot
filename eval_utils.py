@@ -116,7 +116,7 @@ def query_assistant(question):
 
 
 # --- Evaluate and Save Results ---
-def evaluate_string_and_save(pdf_path, qa_pairs):
+def evaluate_string_and_save(qa_pairs, threshold=0.7):
     total = len(qa_pairs)
     correct = 0
     total_time = 0.0
@@ -133,7 +133,7 @@ def evaluate_string_and_save(pdf_path, qa_pairs):
         total_time += response_time
 
         similarity = fuzz.ratio(answer.lower(), expected.lower())
-        match = "Yes" if similarity >= 70 else "No"
+        match = "Yes" if similarity >= threshold else "No"
         if match == "Yes":
             correct += 1
 
@@ -188,7 +188,7 @@ def save_results_seq(results, folder="evaluation_results", base_filename="result
     print(f"Saved results to: {filepath}")
     return filepath
 
-def evaluate_semantic_and_save(pdf_path, qa_pairs, model, threshold=0.7, save_results_seq=None):
+def evaluate_semantic_and_save(qa_pairs, model, threshold=0.7, save_results_seq=None):
     total = len(qa_pairs)
     correct = 0
     total_time = 0.0
@@ -201,7 +201,7 @@ def evaluate_semantic_and_save(pdf_path, qa_pairs, model, threshold=0.7, save_re
         print("Question:", question)
 
         start = time.time()
-        answer = query_assistant(question)  # make sure this is imported or defined!
+        answer = query_assistant(question)
         response_time = time.time() - start
         total_time += response_time
 

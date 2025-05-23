@@ -32,22 +32,22 @@ assistant = client.beta.assistants.create(
 
 
 # Set page configuration
-st.set_page_config(page_title="Fidelidade AI Assistant", layout="wide")
+st.set_page_config(page_title="FIDCHAT | Fidelidade", layout="wide")
+
+st.image("images/fidelidade.png", width=200)
 
 # Initialize session state
 if "selected_tab" not in st.session_state:
-    st.session_state.selected_tab = "ChatFid"
+    st.session_state.selected_tab = "FIDCHAT"
 
 # Show option menu and capture user selection
 selected = option_menu(
     menu_title=None,
-    options=["ChatFid", "Login"],
+    options=["FIDCHAT", "INICIAR SESSÃO"],
     icons=["robot", "person"],
     orientation="horizontal",
-    default_index=["ChatFid", "Login"].index(st.session_state.selected_tab)
+    default_index=["FIDCHAT", "INICIAR SESSÃO"].index(st.session_state.selected_tab)
 )
-
-
 
 # If the selection changed, update session state and rerun the app
 if selected != st.session_state.selected_tab:
@@ -58,7 +58,7 @@ if selected != st.session_state.selected_tab:
 user_id = st.session_state.get("username")
 
 # Page routing logic
-if st.session_state.selected_tab == "ChatFid":
+if st.session_state.selected_tab == "FIDCHAT":
     if "selected_convo_idx" not in st.session_state:
         st.session_state.selected_convo_idx = 0
 
@@ -69,7 +69,7 @@ if st.session_state.selected_tab == "ChatFid":
     if user_id:
         conversations = h.load_user_history(user_id)
         options = [c["title"] for c in conversations] if conversations else []
-        options = ["Nova Conversa"] + options
+        options = ["Nova conversa"] + options
 
 
         # Add a new conversation option
@@ -96,7 +96,7 @@ if st.session_state.selected_tab == "ChatFid":
             # Conversation Rename Logic
             current_title = conversations[selected_convo_idx - 1]["title"]
             new_title = st.text_input(
-                "Renomear conversa:",
+                "Mudar o nome da conversa:",
                 value=current_title,
                 key=f"rename_convo_{selected_convo_idx}"
             )
@@ -106,7 +106,7 @@ if st.session_state.selected_tab == "ChatFid":
                 st.rerun()
 
             # Conversation Delete Logic
-            if st.button("Apagar esta conversa", key=f"delete_convo_{selected_convo_idx}"):
+            if st.button("Eliminar esta conversa", key=f"delete_convo_{selected_convo_idx}"):
                 del conversations[selected_convo_idx - 1]
                 h.save_user_history(user_id, conversations)
                 st.session_state.selected_convo_idx = 0
@@ -118,5 +118,5 @@ if st.session_state.selected_tab == "ChatFid":
     bot.assistant_chat(client, assistant.id, user_id=user_id, selected_convo_idx=selected_convo_idx-1 if selected_convo_idx > 0 else 0)
 
 # Login page    
-elif st.session_state.selected_tab == "Login":
+elif st.session_state.selected_tab == "INICIAR SESSÃO":
     l.login()

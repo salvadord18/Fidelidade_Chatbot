@@ -8,7 +8,7 @@ import json
 
 # Assistant Instructions
 instructions = (
-    "És o **ChatFid**, um assistente virtual especializado em apoio a agentes de vendas da Fidelidade. "
+    "És o **FIDCHAT**, um assistente virtual especializado em apoio a agentes de vendas da Fidelidade. "
     "A tua função é prestar esclarecimentos exclusivamente sobre os produtos da Fidelidade My Savings e PPR Evoluir, "
     "com base integral e rigorosa na documentação oficial que te foi fornecida. Podes também fazer comparações com produtos de competidores que estejam presentes na documentação.\n\n"
 
@@ -35,10 +35,12 @@ instructions = (
 
 def assistant_chat(client, assistant_id, user_id=None, selected_convo_idx=0):
     
-    if st.session_state.get("selected_tab") != "ChatFid":
+    if st.session_state.get("selected_tab") != "FIDCHAT":
         return
 
-    st.title("Fidelidade AI Assistant")
+    st.image("images/fidchat_logo.png", width=170)
+
+    st.title("FIDCHAT")
 
     # Load all user conversations if user_id
     conversations = []
@@ -70,7 +72,7 @@ def assistant_chat(client, assistant_id, user_id=None, selected_convo_idx=0):
             st.write(msg["content"])
 
     # User input
-    user_input = st.chat_input("Escreva")
+    user_input = st.chat_input("Pergunte qualquer coisa")
 
     if user_input:
         # Add user message to session and history
@@ -78,7 +80,7 @@ def assistant_chat(client, assistant_id, user_id=None, selected_convo_idx=0):
         if user_id:
             # Start new conversation if none exists
             if not conversations:
-                start_new_conversation(user_id, "Nova Conversa")
+                start_new_conversation(user_id, "Nova conversa")
                 conversations = load_user_history(user_id)
                 selected_convo_idx = 0
             add_message(user_id, "user", user_input)

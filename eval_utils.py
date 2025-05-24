@@ -2,6 +2,11 @@
 import csv
 import os
 import time
+import pandas as pd
+from tqdm import tqdm
+
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 import pdfplumber
 from fuzzywuzzy import fuzz
@@ -116,17 +121,15 @@ def query_assistant(question):
 
 
 # --- Evaluate and Save Results ---
-def evaluate_string_and_save(qa_pairs, threshold=0.7):
+def evaluate_string_and_save(qa_pairs, threshold=70, run_once=False, show_print=False):
     total = len(qa_pairs)
     correct = 0
     total_time = 0.0
 
     results = []
 
-    for idx, (question, expected) in enumerate(qa_pairs, 1):
-        print(f"\n--- Q{idx} ---")
-        print("Question:", question)
-
+    # Use a single tqdm progress bar and keep output clean
+    for idx, (question, expected) in enumerate(tqdm(qa_pairs, desc="Evaluating", leave=True), 1):
         start = time.time()
         answer = query_assistant(question)
         response_time = time.time() - start
@@ -137,34 +140,44 @@ def evaluate_string_and_save(qa_pairs, threshold=0.7):
         if match == "Yes":
             correct += 1
 
-        print()
-        print("Answer:", answer)
-        print()
-        print("Expected:", expected)
-        print()
-        print(f"Similarity: {similarity}, Match: {match}, Time: {response_time:.2f}s")
-
         results.append({
+            "Question_ID": idx,
             "Question": question,
-            "Expected Answer": expected,
-            "Chatbot Answer": answer,
+            "Expected_Answer": expected,
+            "Chatbot_Answer": answer,
             "Similarity": similarity,
             "Match": match,
-            "Response Time (s)": round(response_time, 2)
+            "Response_Time_s": round(response_time, 2)
         })
+
+        if show_print:
+            tqdm.write(f"\n--- Q{idx} ---")
+            tqdm.write(f"Question: {question}")
+            tqdm.write(f"Answer: {answer}")
+            tqdm.write(f"Expected: {expected}")
+            tqdm.write(f"Similarity: {similarity}, Match: {match}, Time: {response_time:.2f}s")
+            tqdm.write('----------------------------------')
 
     accuracy = (correct / total * 100) if total else 0
     avg_response = (total_time / total) if total else 0
 
-    # Save to CSV
-    save_results_seq(results, folder="eval_string", base_filename="eval_results")
-
+    summary = {
+        "Total": total,
+        "Correct": correct,
+        "Accuracy": accuracy,
+        "Average_Similarity": sum(r['Similarity'] for r in results) / total if total else 0,
+        "Average_Response_Time_s": avg_response,
+        "Threshold": threshold,
+        "Chatbot_instructions": instructions
+    }
 
     print("\n===== Summary =====")
-    print(f"Total: {total}")
-    print(f"Correct: {correct}")
-    print(f"Accuracy: {accuracy:.2f}%")
-    print(f"Average Response Time: {avg_response:.2f}s")
+    print(f"Total: {total}, Correct: {correct}, Accuracy: {accuracy:.2f}%, Avg Response Time: {avg_response:.2f}s")
+    
+    if run_once:
+        save_results_seq(results, folder="eval_string", base_filename="eval_results")
+    else:
+        return results, summary
 
 def get_next_seq_filename(folder, base_filename, ext="csv"):
     os.makedirs(folder, exist_ok=True)
@@ -177,7 +190,7 @@ def get_next_seq_filename(folder, base_filename, ext="csv"):
     next_seq = max(seq_numbers, default=0) + 1
     return os.path.join(folder, f"{base_filename}_{next_seq}.{ext}")
 
-def save_results_seq(results, folder="evaluation_results", base_filename="results"):
+def save_results_seq(results, folder, base_filename):
     os.makedirs(folder, exist_ok=True)
     filepath = get_next_seq_filename(folder, base_filename)
     if results:
@@ -188,18 +201,14 @@ def save_results_seq(results, folder="evaluation_results", base_filename="result
     print(f"Saved results to: {filepath}")
     return filepath
 
-def evaluate_semantic_and_save(qa_pairs, model, threshold=0.7, save_results_seq=None):
+def evaluate_semantic_and_save(qa_pairs, model, threshold=0.7, run_once=True, show_print=False):
     total = len(qa_pairs)
     correct = 0
     total_time = 0.0
 
     results = []
-    mismatches = []
 
-    for idx, (question, expected) in enumerate(qa_pairs, 1):
-        print(f"\n--- Q{idx} ---")
-        print("Question:", question)
-
+    for idx, (question, expected) in enumerate(tqdm(qa_pairs, desc="Evaluating", leave=True), 1):
         start = time.time()
         answer = query_assistant(question)
         response_time = time.time() - start
@@ -213,32 +222,89 @@ def evaluate_semantic_and_save(qa_pairs, model, threshold=0.7, save_results_seq=
         if match == "Yes":
             correct += 1
 
-        print("Answer:", answer)
-        print("Expected:", expected)
-        print('----------------------------------')
-        print(f"Cosine Similarity: {cosine_sim:.2f}, Match: {match}, Time: {response_time:.2f}s")
-
         result_row = {
+            "Question_ID": idx,
             "Question": question,
             "Expected Answer": expected,
-            "Chatbot Answer": answer,
-            "Cosine Similarity": round(cosine_sim, 2),
+            "Chatbot_Answer": answer,
+            "Cosine_Similarity": round(cosine_sim, 2),
             "Match": match,
-            "Response Time (s)": round(response_time, 2)
+            "Response_Time_s": round(response_time, 2)
         }
         results.append(result_row)
 
-        if match == "No":
-            mismatches.append(result_row)
+        if show_print:
+            tqdm.write(f"\n--- Q{idx} ---")
+            tqdm.write(f"Question: {question}")
+            tqdm.write(f"Answer: {answer}")
+            tqdm.write(f"Expected: {expected}")
+            tqdm.write(f"Cosine Similarity: {cosine_sim:.2f}, Match: {match}, Time: {response_time:.2f}s")
+            tqdm.write('----------------------------------')
 
     accuracy = (correct / total * 100) if total else 0
     avg_response = (total_time / total) if total else 0
 
-    if save_results_seq:
-        save_results_seq(results, folder="eval_semantic", base_filename="eval_results")
+    summary = {
+        "Total": total,
+        "Correct": correct,
+        "Accuracy": accuracy,
+        "Average_Similarity": sum(r['Cosine_Similarity'] for r in results) / total if total else 0,
+        "Average_Response_Time_s": avg_response,
+        "Threshold": threshold,
+        "Model": str(model),
+        "Chatbot_instructions": instructions
+    }
 
     print("\n===== Summary =====")
-    print(f"Total Questions: {total}")
-    print(f"Correct Answers: {correct}")
-    print(f"Accuracy: {accuracy:.2f}%")
-    print(f"Average Response Time: {avg_response:.2f}s")
+    print(f"Total: {total}, Correct: {correct}, Accuracy: {accuracy:.2f}%, Avg Response Time: {avg_response:.2f}s")
+
+    if run_once:
+        save_results_seq(results, folder="eval_semantic", base_filename="eval_results")
+    else:
+        return results, summary
+    
+
+def run_multiple_evaluations(qa_pairs, num_runs, threshold,
+                             evaluation_func=None,
+                             model=None,
+                             summary_folder="evaluation",
+                             summary_filename="summary_results",
+                             detailed_filename="detailed_results"):
+
+    if evaluation_func is None:
+        raise ValueError("You must provide an evaluation function.")
+
+    os.makedirs(summary_folder, exist_ok=True)
+
+    all_detailed = []
+    all_summaries = []
+
+    for run_idx in range(1, num_runs + 1):
+        print(f"\n### Running Evaluation {run_idx}/{num_runs} ###")
+
+        # Pass the model to the evaluation function if it's a semantic eval
+        if model is not None:
+            results, summary = evaluation_func(qa_pairs=qa_pairs, model=model, threshold=threshold, run_once=False)
+        else:
+            results, summary = evaluation_func(qa_pairs=qa_pairs, threshold=threshold, run_once=False)
+
+        # Add run index to each detailed result
+        for r in results:
+            r["Run"] = run_idx
+        all_detailed.extend(results)
+
+        summary["Run"] = run_idx
+        all_summaries.append(summary)
+
+    # Save detailed results CSV
+    detailed_df = pd.DataFrame(all_detailed)
+    detailed_csv_path = os.path.join(summary_folder, f"{detailed_filename}.csv")
+    detailed_df.to_csv(detailed_csv_path, index=False)
+
+    # Save summary CSV
+    summary_df = pd.DataFrame(all_summaries)
+    summary_csv_path = os.path.join(summary_folder, f"{summary_filename}.csv")
+    summary_df.to_csv(summary_csv_path, index=False)
+
+    print(f"\nSaved detailed results to: {detailed_csv_path}")
+    print(f"Saved summary results to: {summary_csv_path}")

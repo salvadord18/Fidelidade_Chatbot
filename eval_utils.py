@@ -308,3 +308,61 @@ def run_multiple_evaluations(qa_pairs, num_runs, threshold,
 
     print(f"\nSaved detailed results to: {detailed_csv_path}")
     print(f"Saved summary results to: {summary_csv_path}")
+
+
+# --- Evaluattion Bot ---
+instructions2 = ('Give a general similarity score between expected answer and actual answer. \
+                 The answers are supposed to be similar and transmite more or less the same message. \
+                 If the actual answer looks more complete than the expected answer, the similarity score should be higher.\
+                 Output should be a whole number between 0-10. Do not write anything else')
+
+
+assistant2 = client.beta.assistants.create(
+  model="gpt-4o-mini", 
+  instructions="",
+  tools=[{"type":"file_search"}],
+  tool_resources={"file_search":{"vector_store_ids":["vs_ezpssNVZDpwb0RjgcxSwbNZz"]}},
+  temperature=0.2,
+  top_p=1
+)
+
+import app as app
+
+def eval_chat(question, expected_answer, actual_answer):
+
+    client = app.client
+
+    instructions = instructions2
+
+    # Create a new thread
+    thread = client.beta.threads.create()
+
+    # Prepare the prompt
+    prompt = f"{instructions}\n\nQuestion: {question}\nExpected Answer: {expected_answer}\nActual Answer: {actual_answer}"
+
+    # Send the message
+    client.beta.threads.messages.create(
+        thread_id=thread.id,
+        role="user",
+        content=prompt
+    )
+
+    # Run the assistant
+    run = client.beta.threads.runs.create(
+        thread_id=thread.id,
+        assistant_id=assistant2.id
+    )
+
+    # Wait until it's done
+    while run.status in ["queued", "in_progress", "cancelling"]:
+        time.sleep(1)
+        run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
+
+    # Retrieve and return the response
+    if run.status == "completed":
+        messages_list = client.beta.threads.messages.list(thread_id=thread.id)
+        for msg in reversed(messages_list.data):
+            if msg.role == "assistant":
+                response = msg.content[0].text.value.strip()
+                return response
+    return "[ERROR] Failed to get assistant response."

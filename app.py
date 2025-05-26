@@ -32,7 +32,11 @@ assistant = client.beta.assistants.create(
 
 
 # Set page configuration
-st.set_page_config(page_title="FIDCHAT | Fidelidade", layout="wide")
+st.set_page_config(
+    page_title="FIDCHAT | Fidelidade",
+    layout="wide",
+    page_icon="images/fidchat_icon2.png"
+)
 
 st.image("images/fidelidade.png", width=200)
 

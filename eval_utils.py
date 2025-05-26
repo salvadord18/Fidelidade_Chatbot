@@ -51,6 +51,9 @@ def save_results_seq(results, folder, base_filename="results"):
     print(f"Saved results to: {filepath}")
     return filepath
 
+import re
+import pdfplumber
+
 def extract_qa_pairs_from_pdf(pdf_path):
     def save_current_pair():
         if question_lines and answer_lines:
@@ -59,7 +62,8 @@ def extract_qa_pairs_from_pdf(pdf_path):
             qa_pairs.append((full_question, full_answer))
 
     qa_pairs = []
-    question_lines, answer_lines = [], []
+    question_lines = []
+    answer_lines = []
     current_section = ""
     mode = None  # 'question' or 'answer'
 
@@ -71,29 +75,55 @@ def extract_qa_pairs_from_pdf(pdf_path):
         if not line:
             continue
 
-        # Get section name
+        # Section detection (e.g., "1) Section Name")
         section_match = re.match(r'^(\d+)\)\s*(.+)', line)
         if section_match:
+            # Save existing pair before switching section
+            save_current_pair()
+            question_lines = []
+            answer_lines = []
+            mode = None
             current_section = section_match.group(2).strip()
             continue
 
-        if line.startswith("•"):
+        # Answer line starting with bullet + R:
+        if line.startswith("• R:"):
+            # Save previous QA pair before starting answer
+            save_current_pair()
+            # Keep question_lines intact because answer is for last question
+            answer_lines = [line.removeprefix("• R:").strip()]
+            mode = 'answer'
+            continue
+
+        # Question start line (bullet but NOT answer)
+        if line.startswith("•") and not line.startswith("• R:"):
+            # Save previous QA pair
             save_current_pair()
             question_lines = [line.removeprefix("•").strip()]
             answer_lines = []
             mode = 'question'
+            continue
 
-        elif line.startswith("R:"):
+        # Answer start line (without bullet)
+        if line.startswith("R:"):
+            # Save previous QA pair
+            save_current_pair()
             answer_lines = [line.removeprefix("R:").strip()]
             mode = 'answer'
+            continue
 
-        elif mode == 'question':
+        # Continue appending to question or answer based on mode
+        if mode == 'question':
             question_lines.append(line)
         elif mode == 'answer':
             answer_lines.append(line)
+        else:
+            pass
 
-    save_current_pair()  # Save any remaining pair
+    # Save last QA pair if any
+    save_current_pair()
     return qa_pairs
+
 
 
 # --- Ask a Question using your Assistant ---
@@ -236,7 +266,7 @@ def evaluate_semantic_and_save(qa_pairs, model, model_name_str, threshold=0.7, r
         "Total": total,
         "Correct": correct,
         "Accuracy": accuracy,
-        "Average_Similarity": sum(r['Cosine_Similarity'] for r in results) / total if total else 0,
+        "Average_Similarity": np.mean([r['Cosine_Similarity'] for r in results]) if results else 0,
         "Average_Response_Time_s": avg_response,
         "Threshold": threshold,
         "Model": str(model),
@@ -386,10 +416,31 @@ def answer_faq(qa_pairs, model, show_print=False):
 
     return data
 
-def evaluate_precomputed(data, model_name_str, thresholds=[0.5, 0.6, 0.7, 0.8, 0.9]):
-    total = len(data)
-    questions = [item["Question"] for item in data]
+def bot_evaluation(qa_pairs, query_assistant, eval_chat):
+    results = []
+    
+    for idx, (question, expected_answer) in enumerate(tqdm(qa_pairs, desc="Evaluating using the Bot")):
+        start_time = time.time()
+        actual_answer = query_assistant(question)
+        end_time = time.time()
 
+        response_time = end_time - start_time
+
+        evaluation = eval_chat(question, expected_answer, actual_answer)
+
+        results.append({
+            "Question_ID": idx,
+            "Question": question,
+            "Expected Answer": expected_answer,
+            "Chatbot_Answer": actual_answer,
+            "Similarity_Score": evaluation,
+            "Response_Time_s": response_time
+        })
+    
+    return results
+
+def evaluate_precomputed(data, model_name_str, similarity_col='Cosine_Similarity', thresholds=[0.5, 0.6, 0.7, 0.8, 0.9]):
+    total = len(data)
     all_results = {}
     total_time = sum(item["Response_Time_s"] for item in data)
 
@@ -398,7 +449,8 @@ def evaluate_precomputed(data, model_name_str, thresholds=[0.5, 0.6, 0.7, 0.8, 0
         results = []
 
         for item in data:
-            match = "Yes" if item["Cosine_Similarity"] >= threshold else "No"
+            similarity = float(item[similarity_col])
+            match = "Yes" if similarity >= threshold else "No"
             if match == "Yes":
                 correct += 1
 
@@ -407,7 +459,7 @@ def evaluate_precomputed(data, model_name_str, thresholds=[0.5, 0.6, 0.7, 0.8, 0
                 "Question": item["Question"],
                 "Expected Answer": item["Expected Answer"],
                 "Chatbot_Answer": item["Chatbot_Answer"],
-                "Cosine_Similarity": round(item["Cosine_Similarity"], 2),
+                similarity_col: round(similarity, 2),
                 "Match": match,
                 "Response_Time_s": round(item["Response_Time_s"], 2)
             }
@@ -415,7 +467,7 @@ def evaluate_precomputed(data, model_name_str, thresholds=[0.5, 0.6, 0.7, 0.8, 0
 
         accuracy = (correct / total * 100) if total else 0
         avg_response = (total_time / total) if total else 0
-        avg_similarity = sum(item['Cosine_Similarity'] for item in data) / total if total else 0
+        avg_similarity = sum(float(item[similarity_col]) for item in data) / total if total else 0
 
         summary = {
             "Total": total,
@@ -435,29 +487,31 @@ def evaluate_precomputed(data, model_name_str, thresholds=[0.5, 0.6, 0.7, 0.8, 0
             "summary": summary
         }
 
-    # Save results
-    save_results_seq(all_results, folder="evaluation", base_filename=f"{model_name_str}_eval_results_all_thresholds")
+    return summary, all_results
 
-    return questions, all_results
 
-def plot_evaluation_metrics(evaluations):
+def plot_evaluation_metrics(evaluations, model_name_str, similarity_col='Cosine_Similarity'):
     """
-    Plots accuracy (%) and median cosine similarity across thresholds.
+    Plots accuracy (%) and average similarity across thresholds.
 
     Parameters:
     - evaluations: dict
         Dictionary where keys are thresholds and values are dicts
         containing 'results' (list of dicts) and 'summary' (dict).
+    - model_name_str: str
+        Name of the model to display in the plot title.
+    - similarity_col: str
+        The column name for similarity scores.
     """
     thresholds = sorted(evaluations.keys())
     accuracies = []
-    median_sims = []
+    avg_similarities = []
 
     for t in thresholds:
         results = evaluations[t]['results']
-        sims = [r['Cosine_Similarity'] for r in results]
-        median_sim = np.median(sims)
-        median_sims.append(median_sim)
+        sims = [r[similarity_col] for r in results]
+        avg_sim = np.mean(sims)
+        avg_similarities.append(avg_sim)
 
         accuracy = evaluations[t]['summary'].get('Accuracy')
         if accuracy is None:
@@ -467,7 +521,7 @@ def plot_evaluation_metrics(evaluations):
 
     fig, ax1 = plt.subplots()
 
-    color = 'tab:blue'
+    color = '#ee2429'
     ax1.set_xlabel('Threshold')
     ax1.set_ylabel('Accuracy (%)', color=color)
     ax1.plot(thresholds, accuracies, marker='o', color=color, label='Accuracy')
@@ -475,12 +529,14 @@ def plot_evaluation_metrics(evaluations):
     ax1.set_ylim(0, 100)
 
     ax2 = ax1.twinx()
-    color = 'tab:orange'
-    ax2.set_ylabel('Median Cosine Similarity', color=color)
-    ax2.plot(thresholds, median_sims, marker='x', linestyle='--', color=color, label='Median Similarity')
+    color = "#383f44db"
+    ax2.set_ylabel(f'Average {similarity_col}', color=color)
+    ax2.plot(thresholds, avg_similarities, marker='x', linestyle='--', color=color, label='Average Similarity')
     ax2.tick_params(axis='y', labelcolor=color)
-    ax2.set_ylim(0, 1)
 
-    plt.title('Threshold Tuning: Accuracy and Median Similarity')
+    # Adjust y-axis for similarity scores (auto-scale)
+    ax2.set_ylim(min(avg_similarities) * 0.95, max(avg_similarities) * 1.05)
+
+    plt.title(f'Threshold Tuning: Accuracy and Average Similarity for {model_name_str}')
     fig.tight_layout()
     plt.show()

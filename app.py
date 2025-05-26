@@ -12,8 +12,8 @@ import history as h
 
 # Initialize Azure OpenAI client
 client = AzureOpenAI(
-    azure_endpoint=os.getenv("endpoint"),
-    api_key=os.getenv("API_KEY"),
+    azure_endpoint="https://ai-bcds.openai.azure.com/",
+    api_key="8J6pTdfaGgA5r193UVLsBshUspqwNpal42Jse1aHaok1cWNTLpRkJQQJ99BDACYeBjFXJ3w3AAABACOGLa23",
     api_version="2024-05-01-preview"
 )
 
